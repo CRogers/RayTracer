@@ -1,4 +1,6 @@
 bin/
 lib/
 gen/
+applet/
+preferences.txt
 .settings/
