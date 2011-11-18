@@ -18,7 +18,7 @@ public class RayTracer extends PApplet {
 	private List<Item> items = new ArrayList<Item>();
 	private List<LightSource> lightSources = new ArrayList<LightSource>();
 	
-	Shader shader = new LambertianShader();
+	Shader shader = new ShaderPipeline(new AmbientShader(0.7), new LambertianShader());
 	
 	public void setup() {
 		size(800,800,JAVA2D);
@@ -91,7 +91,7 @@ public class RayTracer extends PApplet {
 	
 	public void keyPressed(){
 		switch(key){
-			case 'a': shader = new AmbientShader(); break;
+			case 'a': shader = new AmbientShader(1); break;
 			case 'h': shader = new HeadlightShader(); break;
 			case 'l': shader = new LambertianShader(); break;
 		}
