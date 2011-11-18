@@ -62,6 +62,14 @@ public class PVectorD implements Serializable {
 	 */
 	public PVectorD() {
 	}
+	
+	/**
+	 * Produces a new zero vector
+	 * @return Zero vector
+	 */
+	public static PVectorD zero(){
+		return new PVectorD(0,0,0);
+	}
 
 	/**
 	 * Constructor for a 3D vector.
