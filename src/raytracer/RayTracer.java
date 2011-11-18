@@ -18,7 +18,7 @@ public class RayTracer extends PApplet {
 	private List<Item> items = new ArrayList<Item>();
 	private List<LightSource> lightSources = new ArrayList<LightSource>();
 	
-	Shader shader = new HeadlightShader();
+	Shader shader = new LambertianShader();
 	
 	public void setup() {
 		size(800,800,JAVA2D);
@@ -28,6 +28,8 @@ public class RayTracer extends PApplet {
 		items.add(new Sphere(new PVectorD(0.7,0,3), 0.7, Color.BLUE));
 		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.5, Color.RED));
 		items.add(new Sphere(new PVectorD(0,0.5,2), 0.3, Color.GREEN));
+		
+		lightSources.add(new PointLight(new PVectorD(1,1,0), Color.WHITE, 1));
 	}
 
 	public void draw() {
@@ -39,11 +41,12 @@ public class RayTracer extends PApplet {
 		
 		double max = (double)Math.max(width, height);
 		
-		double dh = (double)height;
-		double dw = (double)width;
-		
 		double[] zbuffer = new double[width*height];
 		Arrays.fill(zbuffer, Double.MAX_VALUE);
+		
+		double maxIntensity = 0;
+		Color[] outputColors = new Color[width*height];
+		double[] intensities = new double[width*height];
 		
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
@@ -54,17 +57,30 @@ public class RayTracer extends PApplet {
 					
 					if(ips.length > 0){
 						PVectorD ip = ips[0];
+						int i = y*width+x;
 						
-						if(zbuffer[y*width+x] > ip.z){
-							zbuffer[y*width+x] = ip.z;
+						if(zbuffer[i] > ip.z){
+							zbuffer[i] = ip.z;
 							
-							set(x,y,scaleColor(item.color,shader.computeIntensity(lightSources, ip, item)).getRGB());
+							double intensity = shader.computeIntensity(lightSources, ip, item);
+							maxIntensity = Math.max(maxIntensity, intensity);
+							
+							outputColors[i] = item.color;
+							intensities[i] = intensity;
 						}
 					}
-				}
-				
+				}				
 			}
 		}
+		
+		loadPixels();
+		for(int i = 0; i < width*height; i++){
+			if(outputColors[i] != null){
+				pixels[i] = scaleColor(outputColors[i], intensities[i]/maxIntensity).getRGB();
+				//if(intensities[i]/maxIntensity > 1)
+			}
+		}
+		updatePixels();
 		
 	}
 
@@ -77,6 +93,7 @@ public class RayTracer extends PApplet {
 		switch(key){
 			case 'a': shader = new AmbientShader(); break;
 			case 'h': shader = new HeadlightShader(); break;
+			case 'l': shader = new LambertianShader(); break;
 		}
 		
 		redraw();
