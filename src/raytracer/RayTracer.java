@@ -18,7 +18,7 @@ public class RayTracer extends PApplet {
 	private List<Item> items = new ArrayList<Item>();
 	private List<LightSource> lightSources = new ArrayList<LightSource>();
 	
-	Shader shader = new ShaderPipeline(new AmbientShader(0.7), new LambertianShader());
+	Shader shader = new ShaderPipeline(new AmbientShader(0.7), new LambertianShader(), new PhongShader(2.5, 20));
 	
 	public void setup() {
 		size(800,800,JAVA2D);
@@ -29,7 +29,7 @@ public class RayTracer extends PApplet {
 		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.5, Color.RED));
 		items.add(new Sphere(new PVectorD(0,0.5,2), 0.3, Color.GREEN));
 		
-		lightSources.add(new PointLight(new PVectorD(1,1,0), Color.WHITE, 1));
+		lightSources.add(new PointLight(new PVectorD(1,1,0), Color.WHITE, 2));
 	}
 
 	public void draw() {
@@ -74,9 +74,10 @@ public class RayTracer extends PApplet {
 		}
 		
 		loadPixels();
+		double mi = maxIntensity * 0.90;
 		for(int i = 0; i < width*height; i++){
 			if(outputColors[i] != null){
-				pixels[i] = scaleColor(outputColors[i], intensities[i]/maxIntensity).getRGB();
+				pixels[i] = scaleColor(outputColors[i], intensities[i]/mi).getRGB();
 				//if(intensities[i]/maxIntensity > 1)
 			}
 		}
@@ -85,7 +86,11 @@ public class RayTracer extends PApplet {
 	}
 
 	private Color scaleColor(Color color, double s) {
-		return new Color((int)(color.getRed()*s), (int)(color.getGreen()*s), (int)(color.getBlue()*s));
+		return new Color((int)(color.getRed()*clamp(s)), (int)(color.getGreen()*clamp(s)), (int)(color.getBlue()*clamp(s)));
+	}
+	
+	private double clamp(double x){
+		return Math.max(0, Math.min(x, 1));
 	}
 	
 	

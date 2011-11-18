@@ -14,7 +14,9 @@ public abstract class LightSource {
 	}
 	
 	public PVectorD getLightVector(PVectorD point){
-		return PVectorD.sub(point, position);
+		PVectorD ret = PVectorD.sub(point, position);
+		ret.normalize();
+		return ret;
 	}
 	
 	public abstract double intensityAt(PVectorD point);
