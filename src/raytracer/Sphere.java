@@ -18,14 +18,14 @@ public class Sphere extends Item {
 		
 		PVectorD t = PVectorD.sub(l.start, center);
 		
-		double a = l.dir.x + l.dir.y + l.dir.z;
-		double b = 2 * (t.x + t.y + t.z);
-		double c = t.x*t.x + t.y*t.y + t.z*t.z - radius*radius;
+		double a = PVectorD.dot(l.dir, l.dir);
+		double b = 2 * PVectorD.dot(t,  l.dir);
+		double c = PVectorD.dot(t, t) - radius*radius;
 		
 		double determinant = b*b - 4*a*c;
 		
 		// One solution
-		if(determinant < 1e-8 && determinant > 1e-8){
+		if(determinant < 1e-8 && determinant > -1e-8){
 			double lambda = -b/(2*a);
 			return new PVectorD[]{ l.pointAt(lambda) };
 		}
