@@ -4,15 +4,15 @@ import processing.core.*;
 
 public class Line {
 
-	public final PVector start;
-	public final PVector dir;
+	public final PVectorD start;
+	public final PVectorD dir;
 	
-	public Line(PVector start, PVector dir) {
+	public Line(PVectorD start, PVectorD dir) {
 		this.start = start;
 		this.dir = dir;
 	}
 	
-	public PVector pointAt(float lambda){
-		return PVector.add(start, PVector.mult(dir, lambda));
+	public PVectorD pointAt(double lambda){
+		return PVectorD.add(start, PVectorD.mult(dir, lambda));
 	}
 }

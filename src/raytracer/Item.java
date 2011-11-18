@@ -5,8 +5,8 @@ import processing.core.*;
 
 public abstract class Item {
 
-	public abstract boolean isIntersectionPoint(PVector p);
-	public abstract List<PVector> intersectionPoints(Line l);
-	public abstract PVector normalAtPoint(PVector p);
+	public abstract boolean isIntersectionPoint(PVectorD p);
+	public abstract PVectorD[] intersectionPoints(Line l);
+	public abstract PVectorD normalAtPoint(PVectorD p);
 	
 }

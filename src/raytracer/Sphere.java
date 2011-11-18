@@ -5,53 +5,52 @@ import processing.core.*;
 
 public class Sphere extends Item {
 
-	public PVector center;
+	public PVectorD center;
 	public float radius;	
 	
-	public Sphere(PVector center, float radius) {
+	public Sphere(PVectorD center, float radius) {
 		this.center = center;
 		this.radius = radius;
 	}
 
 	@Override
-	public List<PVector> intersectionPoints(Line l) {
+	public PVectorD[] intersectionPoints(Line l) {
 		
-		List<PVector> points = new ArrayList<PVector>();
+		PVectorD t = PVectorD.sub(l.start, center);
 		
-		PVector t = PVector.sub(l.start, center);
+		double a = l.dir.x + l.dir.y + l.dir.z;
+		double b = 2 * (t.x + t.y + t.z);
+		double c = t.x*t.x + t.y*t.y + t.z*t.z - radius*radius;
 		
-		float a = l.dir.x + l.dir.y + l.dir.z;
-		float b = 2 * (t.x + t.y + t.z);
-		float c = t.x*t.x + t.y*t.y + t.z*t.z - radius*radius;
+		double determinant = b*b - 4*a*c;
 		
-		float determinant = b*b - 4*a*c;
-		float detAbs = Math.abs(determinant);
-		
-		// One solutions
-		if(detAbs - 1 < 1e-8){
-			float lambda = -b/(2*a);
-			points.add(l.pointAt(lambda));
+		// One solution
+		if(determinant < 1e-8 && determinant > 1e-8){
+			double lambda = -b/(2*a);
+			return new PVectorD[]{ l.pointAt(lambda) };
+		}
+		else if(determinant < 0){
+			return new PVectorD[0];
 		}
 		else {
-			float sqrtDet = PApplet.sqrt(determinant);
-			points.add(l.pointAt((-b + sqrtDet)/(2*a)));
-			points.add(l.pointAt((-b - sqrtDet)/(2*a)));
-		}
-		
-		return points;
-		
+			double sqrtDet = Math.sqrt(determinant);
+			return new PVectorD[] {
+				l.pointAt((-b + sqrtDet)/(2*a)),
+				l.pointAt((-b - sqrtDet)/(2*a))
+			};
+		}		
 	}
 
 	@Override
-	public PVector normalAtPoint(PVector p) {
+	public PVectorD normalAtPoint(PVectorD p) {
 		if(!isIntersectionPoint(p))
 			return null;
 		
-		return PVector.sub(p,center);
+		return PVectorD.sub(p,center);
 	}
 
 	@Override
-	public boolean isIntersectionPoint(PVector p) {
+	public boolean isIntersectionPoint(PVectorD p) {
 		return center.dist(p) - radius < 1e-8;
 	}
 
