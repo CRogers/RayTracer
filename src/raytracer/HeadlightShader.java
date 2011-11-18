@@ -11,7 +11,7 @@ public class HeadlightShader implements Shader {
 	public double computeIntensity(List<LightSource> lightSources, PVectorD point, Item item) {
 		
 		PVectorD normal = item.normalAtPoint(point);
-		return Math.tanh(Math.abs(normal.z));
+		return Math.max(0,Math.tanh(normal.z));
 		
 	}
 
