@@ -18,13 +18,15 @@ public class RayTracer extends PApplet {
 	private List<Item> items = new ArrayList<Item>();
 	private List<LightSource> lightSources = new ArrayList<LightSource>();
 	
+	Shader shader = new HeadlightShader();
+	
 	public void setup() {
-		size(600,600,JAVA2D);
+		size(800,800,JAVA2D);
 		smooth();
 		noLoop();
 		
-		items.add(new Sphere(new PVectorD(0.5,0,3), 0.7, Color.BLUE));
-		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.6, Color.RED));
+		items.add(new Sphere(new PVectorD(0.7,0,3), 0.7, Color.BLUE));
+		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.5, Color.RED));
 		items.add(new Sphere(new PVectorD(0,0.5,2), 0.3, Color.GREEN));
 	}
 
@@ -35,17 +37,17 @@ public class RayTracer extends PApplet {
 	
 	private void castRays(){
 		
+		double max = (double)Math.max(width, height);
+		
 		double dh = (double)height;
 		double dw = (double)width;
 		
 		double[] zbuffer = new double[width*height];
 		Arrays.fill(zbuffer, Double.MAX_VALUE);
 		
-		Shader shader = new HeadlightShader();
-		
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				Line ray = new Line(PVectorD.zero(), new PVectorD((x-width/2)/dw, (y-height/2)/dh, 1));
+				Line ray = new Line(PVectorD.zero(), new PVectorD((x-width/2)/max, (y-height/2)/max, 1));
 				
 				for(Item item : items){
 					PVectorD[] ips = item.intersectionPoints(ray, true);
@@ -68,5 +70,15 @@ public class RayTracer extends PApplet {
 
 	private Color scaleColor(Color color, double s) {
 		return new Color((int)(color.getRed()*s), (int)(color.getGreen()*s), (int)(color.getBlue()*s));
+	}
+	
+	
+	public void keyPressed(){
+		switch(key){
+			case 'a': shader = new AmbientShader(); break;
+			case 'h': shader = new HeadlightShader(); break;
+		}
+		
+		redraw();
 	}
 }
