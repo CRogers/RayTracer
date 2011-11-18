@@ -2,6 +2,7 @@ package raytracer.tests;
 
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.util.*;
 
 import raytracer.*;
@@ -33,7 +34,7 @@ public class Intersections {
 	@Test
 	public void sphere() {
 		
-		Sphere unitSphere = new Sphere(new PVectorD(0,0,0), 1);
+		Sphere unitSphere = new Sphere(new PVectorD(0,0,0), 1, Color.WHITE);
 		
 		testIntersects(new Line(new PVectorD(-2,0,0), new PVectorD(1,0,0)), 
 					   unitSphere, 

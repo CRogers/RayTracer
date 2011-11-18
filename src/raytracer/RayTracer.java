@@ -1,11 +1,19 @@
 package raytracer;
 
+import java.awt.Color;
 import java.util.*;
 
 import processing.core.*;
 
 
 public class RayTracer extends PApplet {
+	
+	public static PApplet pa;
+	
+	public RayTracer(){
+		pa = this;
+	}
+	
 	
 	private List<Item> items = new ArrayList<Item>();
 	
@@ -14,7 +22,8 @@ public class RayTracer extends PApplet {
 		smooth();
 		noLoop();
 		
-		items.add(new Sphere(new PVectorD(0,0,3), 1));
+		items.add(new Sphere(new PVectorD(0.5,0,3), 1, Color.BLUE));
+		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.6, Color.RED));
 	}
 
 	public void draw() {
@@ -35,7 +44,7 @@ public class RayTracer extends PApplet {
 					PVectorD[] ips = item.intersectionPoints(ray);
 					
 					if(ips.length > 0){
-						set(width/2+x,height/2+y,color(255));
+						set(width/2+x,height/2+y,item.color.getRGB());
 					}
 				}
 				

@@ -1,14 +1,16 @@
 package raytracer;
 
+import java.awt.Color;
 import java.util.*;
 import processing.core.*;
 
 public class Sphere extends Item {
 
 	public PVectorD center;
-	public float radius;	
+	public double radius;	
 	
-	public Sphere(PVectorD center, float radius) {
+	public Sphere(PVectorD center, double radius, Color color) {
+		super(color);
 		this.center = center;
 		this.radius = radius;
 	}
