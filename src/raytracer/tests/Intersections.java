@@ -14,7 +14,7 @@ public class Intersections {
 
 	
 	private void testIntersects(Line l, Sphere s, PVectorD... expected){
-		PVectorD[] intersects = s.intersectionPoints(l);
+		PVectorD[] intersects = s.intersectionPoints(l, false);
 		
 		assertTrue(intersects.length == expected.length);
 		

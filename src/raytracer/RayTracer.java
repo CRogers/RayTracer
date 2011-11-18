@@ -22,8 +22,9 @@ public class RayTracer extends PApplet {
 		smooth();
 		noLoop();
 		
-		items.add(new Sphere(new PVectorD(0.5,0,3), 1, Color.BLUE));
+		items.add(new Sphere(new PVectorD(0.5,0,3), 0.7, Color.BLUE));
 		items.add(new Sphere(new PVectorD(-0.5,0,3), 0.6, Color.RED));
+		items.add(new Sphere(new PVectorD(0,0.5,2), 0.3, Color.GREEN));
 	}
 
 	public void draw() {
@@ -36,15 +37,23 @@ public class RayTracer extends PApplet {
 		double dh = (double)height;
 		double dw = (double)width;
 		
-		for(int x = -width/2; x < width/2; x++){
-			for(int y = -height/2; y < height/2; y++){
-				Line ray = new Line(PVectorD.zero(), new PVectorD(x/dw, y/dh, 1));
+		double[] zbuffer = new double[width*height];
+		Arrays.fill(zbuffer, Double.MAX_VALUE);
+		
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				Line ray = new Line(PVectorD.zero(), new PVectorD((x-width/2)/dw, (y-height/2)/dh, 1));
 				
 				for(Item item : items){
-					PVectorD[] ips = item.intersectionPoints(ray);
+					PVectorD[] ips = item.intersectionPoints(ray, true);
 					
 					if(ips.length > 0){
-						set(width/2+x,height/2+y,item.color.getRGB());
+						PVectorD ip = ips[0];
+						
+						if(zbuffer[y*width+x] > ip.z){
+							zbuffer[y*width+x] = ip.z;
+							set(x,y,item.color.getRGB());
+						}
 					}
 				}
 				

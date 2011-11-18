@@ -13,7 +13,7 @@ public abstract class Item {
 	}
 
 	public abstract boolean isIntersectionPoint(PVectorD p);
-	public abstract PVectorD[] intersectionPoints(Line l);
+	public abstract PVectorD[] intersectionPoints(Line l, boolean halfLine);
 	public abstract PVectorD normalAtPoint(PVectorD p);
 	
 }

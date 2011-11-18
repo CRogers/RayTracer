@@ -16,7 +16,7 @@ public class Sphere extends Item {
 	}
 
 	@Override
-	public PVectorD[] intersectionPoints(Line l) {
+	public PVectorD[] intersectionPoints(Line l, boolean halfLine) {
 		
 		PVectorD t = PVectorD.sub(l.start, center);
 		
@@ -29,17 +29,24 @@ public class Sphere extends Item {
 		// One solution
 		if(determinant < 1e-8 && determinant > -1e-8){
 			double lambda = -b/(2*a);
-			return new PVectorD[]{ l.pointAt(lambda) };
+			return (halfLine && lambda < 0) ? new PVectorD[0] : new PVectorD[]{ l.pointAt(lambda) };
 		}
 		else if(determinant < 0){
 			return new PVectorD[0];
 		}
 		else {
 			double sqrtDet = Math.sqrt(determinant);
-			return new PVectorD[] {
-				l.pointAt((-b + sqrtDet)/(2*a)),
-				l.pointAt((-b - sqrtDet)/(2*a))
-			};
+			double l1 = (-b + sqrtDet)/(2*a);
+			double l2 = (-b - sqrtDet)/(2*a);
+			List<PVectorD> list = new ArrayList<PVectorD>(2);
+			
+			if(!halfLine || l1 > 0)
+				list.add(l.pointAt(l1));
+			
+			if(!halfLine || l2 > 0)
+				list.add(l.pointAt(l2));
+			
+			return list.toArray(new PVectorD[0]);
 		}		
 	}
 
