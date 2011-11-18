@@ -16,6 +16,7 @@ public class RayTracer extends PApplet {
 	
 	
 	private List<Item> items = new ArrayList<Item>();
+	private List<LightSource> lightSources = new ArrayList<LightSource>();
 	
 	public void setup() {
 		size(600,600,JAVA2D);
@@ -40,6 +41,8 @@ public class RayTracer extends PApplet {
 		double[] zbuffer = new double[width*height];
 		Arrays.fill(zbuffer, Double.MAX_VALUE);
 		
+		Shader shader = new HeadlightShader();
+		
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				Line ray = new Line(PVectorD.zero(), new PVectorD((x-width/2)/dw, (y-height/2)/dh, 1));
@@ -52,7 +55,8 @@ public class RayTracer extends PApplet {
 						
 						if(zbuffer[y*width+x] > ip.z){
 							zbuffer[y*width+x] = ip.z;
-							set(x,y,item.color.getRGB());
+							
+							set(x,y,scaleColor(item.color,shader.computeIntensity(lightSources, ip, item)).getRGB());
 						}
 					}
 				}
@@ -60,5 +64,9 @@ public class RayTracer extends PApplet {
 			}
 		}
 		
+	}
+
+	private Color scaleColor(Color color, double s) {
+		return new Color((int)(color.getRed()*s), (int)(color.getGreen()*s), (int)(color.getBlue()*s));
 	}
 }

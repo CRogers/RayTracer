@@ -55,7 +55,9 @@ public class Sphere extends Item {
 		if(!isIntersectionPoint(p))
 			return null;
 		
-		return PVectorD.sub(p,center);
+		PVectorD ret = PVectorD.sub(p,center);
+		ret.normalize();
+		return ret;
 	}
 
 	@Override
