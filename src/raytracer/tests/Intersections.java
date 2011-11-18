@@ -46,6 +46,9 @@ public class Intersections {
 		testIntersects(new Line(new PVectorD(1,0,-1), new PVectorD(0, 0, 1)),
 					   unitSphere,
 					   new PVectorD(1,0,0));
+		
+		testIntersects(new Line(new PVectorD(1000,0,0), new PVectorD(0,0,1)),
+					   unitSphere);
 				
 	}
 
